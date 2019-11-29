@@ -7,7 +7,7 @@ from base64 import b64encode, b64decode
 from lane import detect_lane
 from PIL import Image
 from io import BytesIO
-from yolololo import run
+from yolololo import process
 import io
 import base64
 import numpy
@@ -20,8 +20,6 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
-
-run()
 
 
 def image_to_base64(image):
@@ -59,6 +57,7 @@ class Record(db.Model):
     car_id = Column(Integer)
     mainImg = Column(BLOB)
     laneImg = Column(BLOB)
+    deepImg = Column(BLOB)
     latitude = Column(Float)
     longitude = Column(Float)
     speed = Column(Float)
@@ -75,6 +74,7 @@ class Record(db.Model):
             'car_id': self.car_id,
             'mainImg': self.mainImg.decode(),
             'laneImg': self.laneImg.decode(),
+            'deepImg': self.deepImg.decode(),
             'latitude': self.latitude,
             'longitude': self.longitude,
             'speed': self.speed,
@@ -118,10 +118,14 @@ def create_record():
     speed = random.randint(60, 80)
     interval = random.randint(50, 200)
 
+    deepImg = process(image)
+    print(deepImg)
+
     record = Record(
         car_id=request.json.get('car_id'),
         mainImg=screen.encode(),
         laneImg=image_to_base64(Image.fromarray(final, 'RGB')).encode(),
+        deepImg=image_to_base64(Image.fromarray(deepImg, 'RGB')).encode(),
         touch=touch,
         degree=degree,
         speed=speed,

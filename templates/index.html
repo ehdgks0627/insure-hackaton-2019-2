@@ -42,7 +42,7 @@
         </div>
         <div class="my-3 p-3 bg-white rounded box-shadow"
              style="background: green; width: 30%; float: right; height: 300px;">
-            <img id="subImg" style="max-width: 100%">
+            <img id="deepImg" style="max-width: 100%">
         </div>
     </div>
 
@@ -265,6 +265,7 @@
                 success: function(data) {
                     $('#mainImg').attr('src', 'data:image/png;base64, ' + data.mainImg)
                     $('#laneImg').attr('src', 'data:image/png;base64, ' + data.laneImg)
+                    $('#deepImg').attr('src', 'data:image/png;base64, ' + data.deepImg)
                     $('#latitude').text(data.latitude)
                     $('#longitude').text(data.longitude)
                     var date = getCurrentDate()
