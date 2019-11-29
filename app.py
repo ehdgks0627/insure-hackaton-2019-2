@@ -8,6 +8,7 @@ from lane import detect_lane
 from PIL import Image
 from io import BytesIO
 from yolololo import process
+from extraction import detect_plate
 import io
 import base64
 import numpy
@@ -101,7 +102,10 @@ def oauth():
 @app.route('/getRecord', methods=['POST'])
 def get_record():
     record_id = request.json.get('id')
-    record = db.session.query(Record).filter(Record.id == record_id).one()
+    try:
+        record = db.session.query(Record).filter(Record.id == record_id).one()
+    except:
+        return {}, 500
     return record.serialize
 
 
@@ -109,11 +113,14 @@ def get_record():
 def create_record():
     print("STEP1. IN")
     screen = request.json.get('screen')
-    image = Image.open(io.BytesIO(b64decode(screen)))
+    image_raw = Image.open(io.BytesIO(b64decode(screen)))
+
+    image = Image.new("RGB", image_raw.size, (255, 255, 255))
+    image.paste(image_raw, mask=image_raw.split()[3]) # 3 is the alpha channel
 
     ori_image = numpy.asarray(image.resize((640, 360)))
     deep_image = numpy.asarray(image.resize((640, 360)))
-    image = numpy.asaray(image.resize((1280, 720)))
+    image = numpy.asarray(image)
 
     print("SHAPE > ", image.shape)
     print("STEP2. LANE")
@@ -160,7 +167,18 @@ def register_car():
     db.session.add(car)
     db.session.commit()
 
-    return {'status': True}
+    screen = request.json.get('screen')
+    image = Image.open(io.BytesIO(b64decode(screen)))
+    image = numpy.asaray(image)
+    shape = detect_plate(image)
+
+    from pprint import pprint
+    pprint(shape)
+
+    if abs(shape[0][0] - shape[1][0]) < 100:
+        return {'status': False}
+
+    return {'status': True, 'shape': shape}
 
 
 @app.route('/getCar', methods=['POST'])

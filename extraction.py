@@ -250,7 +250,3 @@ def detect_plate(img):
             xy_list.append(list(p2fRectPoints[3]))
 
         return xy_list
-
-
-plate_xy = detect_plate("./car.jpg")
-print(plate_xy)

@@ -33,16 +33,16 @@
 <main role="main" class="container">
     <div class="my-3 p-3" style="display: flow-root">
         <div class="my-3 p-3 bg-white rounded box-shadow"
-             style="background: blue; width: 30%; float: left; height: 200px; margin-right: 5%;">
-            <img id="laneImg" style="max-width: 100%">
+             style="background: blue; width: 30%; float: left; height: 600px; margin-right: 5%;">
+            <img id="laneImg" style="max-width: 100%; height: 100%">
         </div>
         <div class="my-3 p-3 bg-white rounded box-shadow"
-             style="background: green; width: 30%; float: left; height: 200px;">
-            <img id="mainImg" style="max-width: 100%">
+             style="background: green; width: 30%; float: left; height: 600px;">
+            <img id="mainImg" style="max-width: 100%; height: 100%">
         </div>
         <div class="my-3 p-3 bg-white rounded box-shadow"
-             style="background: green; width: 30%; float: right; height: 200px;">
-            <img id="deepImg" style="max-width: 100%">
+             style="background: green; width: 30%; float: right; height: 600px;">
+            <img id="deepImg" style="max-width: 100%; height: 100%">
         </div>
     </div>
 
@@ -275,7 +275,9 @@
                     loadRecord(window.idx)
                 },
                 error: function() {
-                    loadRecord(window.idx)
+                    setTimeout(() => {
+											loadRecord(window.idx)
+                    }, 100)
                 },
                 contentType: 'application/json',
                 data: JSON.stringify({
