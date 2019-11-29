@@ -2,8 +2,11 @@ from flask import Flask, request, jsonify, render_template
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 from sqlalchemy.dialects.sqlite import BLOB
-from sqlalchemy import Column, ForeignKey, Integer, String, DateTime, Float
+from sqlalchemy import Column, ForeignKey, Integer, String, DateTime, Float, Boolean
 from base64 import b64encode, b64decode
+from .lane import detect_lane
+from PIL import Image
+import io
 
 app = Flask(__name__, static_url_path='/static/', static_folder='templates/static')
 
@@ -44,6 +47,8 @@ class Record(db.Model):
     screen = Column(BLOB)
     latitude = Column(Float)
     longitude = Column(Float)
+    degree = Column(Float)
+    touch = Column(Boolean)
     inserted_at = Column(DateTime, default=datetime.utcnow())
 
     @property
@@ -55,6 +60,8 @@ class Record(db.Model):
             'screen': self.screen.decode(),
             'latitude': self.latitude,
             'longitude': self.longitude,
+            'degree': self.degree,
+            'touch': self.touch,
             'inserted_at': self.inserted_at.strftime('%Y-%m-%d %H:%M:%S')
         }
 
@@ -81,9 +88,15 @@ def get_record():
 
 @app.route('/createRecord', methods=['POST'])
 def create_record():
+    screen = b64decode(request.json.get('screen').encode())
+    image = Image.open(io.BytesIO(screen))
+    touch, degree, final = detect_lane(image)
+
     record = Record(
         car_id=request.json.get('car_id'),
-        screen=b64encode(request.json.get('screen').encode()),
+        screen=screen,
+        touch=touch,
+        degree=degree,
         latitude=request.json.get('latitude'),
         longitude=request.json.get('longitude')
     )
