@@ -33,15 +33,15 @@
 <main role="main" class="container">
     <div class="my-3 p-3" style="display: flow-root">
         <div class="my-3 p-3 bg-white rounded box-shadow"
-             style="background: blue; width: 30%; float: left; height: 300px; margin-right: 5%;">
+             style="background: blue; width: 30%; float: left; height: 200px; margin-right: 5%;">
             <img id="laneImg" style="max-width: 100%">
         </div>
         <div class="my-3 p-3 bg-white rounded box-shadow"
-             style="background: green; width: 30%; float: left; height: 300px;">
+             style="background: green; width: 30%; float: left; height: 200px;">
             <img id="mainImg" style="max-width: 100%">
         </div>
         <div class="my-3 p-3 bg-white rounded box-shadow"
-             style="background: green; width: 30%; float: right; height: 300px;">
+             style="background: green; width: 30%; float: right; height: 200px;">
             <img id="deepImg" style="max-width: 100%">
         </div>
     </div>
@@ -271,6 +271,11 @@
                     var date = getCurrentDate()
                     window.speedChart.feedData("&label=" + getCurrentDate() + "&value=" + data.speed)
                     window.intervalChart.feedData("&label=" + getCurrentDate() + "&value=" + data.interval)
+                    window.idx += 1
+                    loadRecord(window.idx)
+                },
+                error: function() {
+                    loadRecord(window.idx)
                 },
                 contentType: 'application/json',
                 data: JSON.stringify({
@@ -280,7 +285,8 @@
         }
 
         $(function() {
-            loadRecord(1)
+            window.idx = 1
+						loadRecord(window.idx)
         })
 
 </script>

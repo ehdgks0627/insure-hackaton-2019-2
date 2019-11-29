@@ -107,27 +107,36 @@ def get_record():
 
 @app.route('/createRecord', methods=['POST'])
 def create_record():
+    print("STEP1. IN")
     screen = request.json.get('screen')
     image = Image.open(io.BytesIO(b64decode(screen)))
-    image = image.resize((1280, 720))
-    image = numpy.asarray(image)
+
+    ori_image = numpy.asarray(image.resize((640, 360)))
+    deep_image = numpy.asarray(image.resize((640, 360)))
+    image = numpy.asaray(image.resize((1280, 720)))
+
+    print("SHAPE > ", image.shape)
+    print("STEP2. LANE")
+
     try:
         touch, degree, final = detect_lane(image)
     except Exception as e:
+        touch = False
+        final = image
+        degree = 30.5
         print(e)
-        return {'status': False}
 
+    latitude = request.json.get('latitude')
+    longitude = request.json.get('longitude')
+    speed = request.json.get('speed')
+    interval = request.json.get('interval', 30)
 
-    latitude = random.randint(505, 508) / 10
-    longitude = random.randint(305, 308) / 10
-    speed = random.randint(60, 80)
-    interval = random.randint(50, 200)
-
-    deepImg = process(image)
+    deepImg = process(deep_image)
+    print("STEP3. DEEP")
 
     record = Record(
         car_id=request.json.get('car_id'),
-        mainImg=screen.encode(),
+        mainImg=image_to_base64(Image.fromarray(ori_image, 'RGB')).encode(),
         laneImg=image_to_base64(Image.fromarray(final, 'RGB')).encode(),
         deepImg=image_to_base64(Image.fromarray(deepImg, 'RGB')).encode(),
         touch=touch,
