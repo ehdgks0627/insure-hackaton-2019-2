@@ -344,7 +344,6 @@ def detect_lane(image):
     Histo, leftlane, rightlane = Histogram(final_transform)
     tr_with_lines, slope = plotlines(final_transform_original, undist_img, leftlane, rightlane)
     Lane_in_wrap = inverseperceptive(tr_with_lines)
-    gray_merge = cv2.bitwise_or(undist_img, Lane_in_wrap)
     result = cv2.addWeighted(undist_img, 1, Lane_in_wrap, 1, 0)
     Final = Text(result, slope)
     slp = round(slope, 2)

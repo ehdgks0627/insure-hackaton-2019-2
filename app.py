@@ -9,6 +9,8 @@ from PIL import Image
 from io import BytesIO
 import io
 import base64
+import numpy
+import random
 
 app = Flask(__name__, static_url_path='/static/', static_folder='templates/static')
 
@@ -21,8 +23,8 @@ db = SQLAlchemy(app)
 
 def image_to_base64(image):
     buffered = BytesIO()
-    image.save(buffered, format="PNG")
-    return base64.b64encode(buffered.getvalue())
+    image.save(buffered, format="JPEG")
+    return base64.b64encode(buffered.getvalue()).decode()
 
 
 class Car(db.Model):
@@ -56,6 +58,8 @@ class Record(db.Model):
     laneImg = Column(BLOB)
     latitude = Column(Float)
     longitude = Column(Float)
+    speed = Column(Float)
+    interval = Column(Float)
     degree = Column(Float)
     touch = Column(Boolean)
     inserted_at = Column(DateTime, default=datetime.utcnow())
@@ -70,6 +74,8 @@ class Record(db.Model):
             'laneImg': self.laneImg.decode(),
             'latitude': self.latitude,
             'longitude': self.longitude,
+            'speed': self.speed,
+            'interval': self.interval,
             'degree': self.degree,
             'touch': self.touch,
             'inserted_at': self.inserted_at.strftime('%Y-%m-%d %H:%M:%S')
@@ -98,24 +104,33 @@ def get_record():
 
 @app.route('/createRecord', methods=['POST'])
 def create_record():
-    screen = b64decode(request.json.get('screen').encode())
-    image = Image.open(io.BytesIO(screen))
-    print(type(image))
+    screen = request.json.get('screen')
+    image = Image.open(io.BytesIO(b64decode(screen)))
+    image = image.resize((1280, 720))
+    image = numpy.asarray(image)
     touch, degree, final = detect_lane(image)
+
+    latitude = random.randint(505, 508) / 10
+    longitude = random.randint(305, 308) / 10
+    speed = random.randint(60, 80)
+    interval = random.randint(50, 200)
 
     record = Record(
         car_id=request.json.get('car_id'),
-        mainImg=screen,
-        laneImg=image_to_base64(final),
+        mainImg=screen.encode(),
+        laneImg=image_to_base64(Image.fromarray(final, 'RGB')).encode(),
         touch=touch,
         degree=degree,
-        latitude=request.json.get('latitude'),
-        longitude=request.json.get('longitude')
+        speed=speed,
+        interval=interval,
+        latitude=latitude,
+        longitude=longitude
     )
     db.session.add(record)
     db.session.commit()
 
-    return {'status': True}
+    return {'status': True, 'id': record.id
+            }
 
 
 @app.route('/registerCar', methods=['POST'])
