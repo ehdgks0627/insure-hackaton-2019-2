@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>D Right</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="static/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="static/css/offcanvas.css" rel="stylesheet">
+    <!-- Step 1 - Include the fusioncharts core library -->
+    <script type="text/javascript" src="https://cdn.fusioncharts.com/fusioncharts/latest/fusioncharts.js"></script>
+    <!-- Step 2 - Include the fusion theme -->
+    <script type="text/javascript" src="https://cdn.fusioncharts.com/fusioncharts/latest/themes/fusioncharts.theme.fusion.js"></script>
+
+    <script type="text/javascript">
+    FusionCharts.ready(function(){
+      const dataSource = {
+        chart: {
+          caption: "{{ age }}세 {{ gender }}의 평균 점수",
+          yaxisname: "점수",
+          numberprefix: "",
+          drawcrossline: "1",
+          theme: "fusion",
+          showvalues: "0"
+        },
+        categories: [
+          {
+            category: [
+              {% for keyword in score %}
+              {
+                label: "{{ TRANSLATE[keyword] }}"
+              },
+              {% endfor %}
+            ]
+          }
+        ],
+        dataset: [
+          {
+            seriesname: "평균점수",
+            data: [
+              {% for keyword in score %}
+              {
+                value: "{{ avr_score[keyword] }}"
+              },
+              {% endfor %}
+            ]
+          },
+          {
+            seriesname: "본인점수",
+            data: [
+              {% for keyword in score %}
+              {
+                value: "{{ score[keyword] }}"
+              },
+              {% endfor %}
+            ]
+          }
+        ]
+      };
+
+
+      var fusioncharts = new FusionCharts({
+        type: "overlappedcolumn2d",
+        renderAt: "chart-container",
+        width: "100%",
+        height: "100%",
+        dataFormat: "json",
+        dataSource
+      });
+      fusioncharts.render();
+
+      var i = 1;
+      {% for keyword in score %}
+        new FusionCharts({
+              type: 'pie2d',
+              renderAt: 'pi' + i,
+              width: '19%',
+              height: '300',
+              dataFormat: 'json',
+              dataSource: {
+                  "chart": {
+                      "caption": "{{ TRANSLATE[keyword] }} 건강 수치",
+                      "xAxisName": "Country",
+                      "yAxisName": "점수",
+                      "numberSuffix": "K",
+                      "theme": "fusion",
+                  },
+                  "data": [{
+                      "label": "Venezuela",
+                      "value": "290"
+                  }, {
+                      "label": "",
+                      "value": "260"
+                  }]
+              }
+          }).render();
+          i += 1
+      {% endfor %}
+
+
+    });
+</script>
+  </head>
+
+  <body class="bg-light">
+
+    <nav class="navbar navbar-expand-md fixed-top navbar-dark bg-dark">
+      <a class="navbar-brand" href="#">D Right</a>
+      <button class="navbar-toggler p-0 border-0" type="button" data-toggle="offcanvas">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+    </nav>
+
+    <main role="main" class="container">
+      <!--
+      <div class="d-flex align-items-center p-3 my-3 text-white-50 bg-purple rounded box-shadow">
+        <img class="mr-3" src="static/svg/bootstrap-outline.svg" alt="" width="48" height="48">
+        <div class="lh-100">
+          <h6 class="mb-0 text-white lh-100">D Right</h6>
+          <small>건강 지표 측정 프로젝트 @ 인슈어테크 X 핀테크 해커톤 2019</small>
+        </div>
+      </div>
+      -->
+
+      <div id="chart-container" class="my-3 p-3 bg-white rounded box-shadow"></div>
+      <div class="my-3 p-3 bg-white rounded box-shadow">
+        <div id="pi1" style="display: inline"></div>
+        <div id="pi2" style="display: inline"></div>
+        <div id="pi3" style="display: inline"></div>
+        <div id="pi4" style="display: inline"></div>
+        <div id="pi5" style="display: inline"></div>
+      </div>
+
+      <div class="my-3 p-3 bg-white rounded box-shadow">
+        <div id="pi6" style="display: inline"></div>
+        <div id="pi7" style="display: inline"></div>
+        <div id="pi8" style="display: inline"></div>
+        <div id="pi9" style="display: inline"></div>
+        <div id="pi10" style="display: inline"></div>
+      </div>
+
+      <div class="my-3 p-3 bg-white rounded box-shadow">
+        <h6 class="border-bottom border-gray pb-2 mb-0">추천 보험 상품 목록</h6>
+        {% for insure in recommend %}
+          <div class="media text-muted pt-3">
+            <img data-src="holder.js/32x32?theme=thumb&bg=007bff&fg=007bff&size=1" alt="" class="mr-2 rounded">
+            <div class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
+              <div class="d-flex justify-content-between align-items-center w-100">
+                <strong class="text-gray-dark">{{ insure['name'] }}</strong>
+                <a href="{{ insure['url'] }}">자세히</a>
+              </div>
+              <span class="d-block">{{ insure['product'] }}</span>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </main>
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script>window.jQuery || document.write('<script src="static/js/jquery-slim.min.js"><\/script>')</script>
+    <script src="static/js/popper.min.js"></script>
+    <script src="static/js/bootstrap.min.js"></script>
+    <script src="static/js/holder.min.js"></script>
+    <script src="static/js/offcanvas.js"></script>
+  </body>
+</html>
