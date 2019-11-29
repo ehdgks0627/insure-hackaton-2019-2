@@ -111,7 +111,12 @@ def create_record():
     image = Image.open(io.BytesIO(b64decode(screen)))
     image = image.resize((1280, 720))
     image = numpy.asarray(image)
-    touch, degree, final = detect_lane(image)
+    try:
+        touch, degree, final = detect_lane(image)
+    except Exception as e:
+        print(e)
+        return {'status': False}
+
 
     latitude = random.randint(505, 508) / 10
     longitude = random.randint(305, 308) / 10
@@ -119,7 +124,6 @@ def create_record():
     interval = random.randint(50, 200)
 
     deepImg = process(image)
-    print(deepImg)
 
     record = Record(
         car_id=request.json.get('car_id'),
@@ -136,8 +140,7 @@ def create_record():
     db.session.add(record)
     db.session.commit()
 
-    return {'status': True, 'id': record.id
-            }
+    return {'status': True, 'id': record.id}
 
 
 @app.route('/registerCar', methods=['POST'])

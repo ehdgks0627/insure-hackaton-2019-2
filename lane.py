@@ -272,52 +272,6 @@ def Text(image, slope):
 
     return image
 
-
-# -------------------------------------------------------------------------------
-# @brief Function for pipeline for whole code
-#
-#  @param Path of Video
-#
-#  @return Array of images, size
-#
-def Pipeline(path):
-    vidObj = cv2.VideoCapture(path)
-    count = 0
-    success = 1
-    img_array = []
-    while (success):
-        if (count == 0):
-            success, image = vidObj.read()
-
-        from PIL import Image
-        im = Image.fromarray(image)
-        im.save('a.png')
-
-        width, height, layers = image.shape
-        size = (height, width)
-        image = Undistort(image)
-        undist_img = image.copy()
-        gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-        transform_w = perspective_view(gray)
-        image_w = Whitelane(transform_w)
-        image_y = Yellowlane(undist_img)
-        final_transform = image_w + image_y
-        final_transform_original = final_transform.copy()
-        Histo, leftlane, rightlane = Histogram(final_transform)
-        tr_with_lines, slope = plotlines(final_transform_original, undist_img, leftlane, rightlane)
-        Lane_in_wrap = inverseperceptive(tr_with_lines)
-        result = cv2.addWeighted(undist_img, 1, Lane_in_wrap, 1, 0)
-        Final = Text(result, slope)
-        count += 1
-        print('Frame processing index')
-        print(count)
-        # cv2.imwrite('%d.jpg' %count,Final)
-        img_array.append(Final)
-        success, image = vidObj.read()
-
-    return img_array, size
-
-
 # video file
 # @brief Function for video processing
 #
