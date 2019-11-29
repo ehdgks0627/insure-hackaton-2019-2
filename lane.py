@@ -3,7 +3,6 @@ import numpy as np
 import os, sys
 from numpy import linalg as LA
 from numpy import linalg as la
-from matplotlib import pyplot as plt
 import math
 from PIL import Image
 import random

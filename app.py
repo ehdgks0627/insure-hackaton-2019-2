@@ -4,7 +4,7 @@ from datetime import datetime
 from sqlalchemy.dialects.sqlite import BLOB
 from sqlalchemy import Column, ForeignKey, Integer, String, DateTime, Float, Boolean
 from base64 import b64encode, b64decode
-from .lane import detect_lane
+from lane import detect_lane
 from PIL import Image
 import io
 
