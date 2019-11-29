@@ -36,7 +36,7 @@ class Car(db.Model):
         }
 
     def __repr__(self):
-        return f"<Car('{self.id}', '{self.car_number}')>"
+        return "<Car('{}', '{}')>".format(self.id, self.car_number)
 
 
 class Record(db.Model):
@@ -66,7 +66,7 @@ class Record(db.Model):
         }
 
     def __repr__(self):
-        return f"<Record('{self.id}', '{self.inserted_at}')>"
+        return "<Record('{}', '{}')>".format(self.id, self.inserted_at)
 
 
 @app.route('/', methods=['GET'])
