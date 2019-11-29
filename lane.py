@@ -333,7 +333,6 @@ def video(img_array, size):
 
 
 def detect_lane(image):
-    width, height, layers = image.shape
     image = Undistort(image)
     undist_img = image.copy()
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)

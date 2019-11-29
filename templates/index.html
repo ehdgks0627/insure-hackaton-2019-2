@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
@@ -16,7 +16,8 @@
     <!-- Step 1 - Include the fusioncharts core library -->
     <script type="text/javascript" src="https://cdn.fusioncharts.com/fusioncharts/latest/fusioncharts.js"></script>
     <!-- Step 2 - Include the fusion theme -->
-    <script type="text/javascript" src="https://cdn.fusioncharts.com/fusioncharts/latest/themes/fusioncharts.theme.fusion.js"></script>
+    <script type="text/javascript"
+            src="https://cdn.fusioncharts.com/fusioncharts/latest/themes/fusioncharts.theme.fusion.js"></script>
 
     <script type="text/javascript">
     FusionCharts.ready(function(){
@@ -67,7 +68,7 @@
 
       var fusioncharts = new FusionCharts({
         type: "overlappedcolumn2d",
-        renderAt: "chart-container",
+        renderAt: "mainImg",
         width: "100%",
         height: "100%",
         dataFormat: "json",
@@ -105,71 +106,84 @@
 
 
     });
-</script>
-  </head>
 
-  <body class="bg-light">
+    </script>
+</head>
 
-    <nav class="navbar navbar-expand-md fixed-top navbar-dark bg-dark">
-      <a class="navbar-brand" href="#">D Right</a>
-      <button class="navbar-toggler p-0 border-0" type="button" data-toggle="offcanvas">
+<body class="bg-light">
+
+<nav class="navbar navbar-expand-md fixed-top navbar-dark bg-dark">
+    <a class="navbar-brand" href="#">D Right</a>
+    <button class="navbar-toggler p-0 border-0" type="button" data-toggle="offcanvas">
         <span class="navbar-toggler-icon"></span>
-      </button>
-    </nav>
+    </button>
+</nav>
 
-    <main role="main" class="container">
-      <!--
-      <div class="d-flex align-items-center p-3 my-3 text-white-50 bg-purple rounded box-shadow">
-        <img class="mr-3" src="static/svg/bootstrap-outline.svg" alt="" width="48" height="48">
-        <div class="lh-100">
-          <h6 class="mb-0 text-white lh-100">D Right</h6>
-          <small>건강 지표 측정 프로젝트 @ 인슈어테크 X 핀테크 해커톤 2019</small>
-        </div>
+<main role="main" class="container">
+    <!--
+    <div class="d-flex align-items-center p-3 my-3 text-white-50 bg-purple rounded box-shadow">
+      <img class="mr-3" src="static/svg/bootstrap-outline.svg" alt="" width="48" height="48">
+      <div class="lh-100">
+        <h6 class="mb-0 text-white lh-100">D Right</h6>
+        <small>건강 지표 측정 프로젝트 @ 인슈어테크 X 핀테크 해커톤 2019</small>
       </div>
-      -->
+    </div>
+    -->
 
-      <div id="chart-container" class="my-3 p-3 bg-white rounded box-shadow"></div>
-      <div class="my-3 p-3 bg-white rounded box-shadow">
+    <div class="my-3 p-3">
+        <img src="file://users/Users/mac/Desktop/a.png">
+    </div>
+
+    <div class="my-3 p-3" style="display: flow-root">
+        <div id="subImg1" class="my-3 p-3 bg-white rounded box-shadow" style="background: blue; width: 40%; float: left; height: 300px;">
+            <img src="file://users/Users/mac/Desktop/b.png">
+        </div>
+        <div id="subImg2" class="my-3 p-3 bg-white rounded box-shadow" style="background: green; width: 40%; float: right; height: 300px;"></div>
+    </div>
+
+    <div class="my-3 p-3 bg-white rounded box-shadow">
         <div id="pi1" style="display: inline"></div>
         <div id="pi2" style="display: inline"></div>
         <div id="pi3" style="display: inline"></div>
         <div id="pi4" style="display: inline"></div>
         <div id="pi5" style="display: inline"></div>
-      </div>
+    </div>
 
-      <div class="my-3 p-3 bg-white rounded box-shadow">
+    <div class="my-3 p-3 bg-white rounded box-shadow">
         <div id="pi6" style="display: inline"></div>
         <div id="pi7" style="display: inline"></div>
         <div id="pi8" style="display: inline"></div>
         <div id="pi9" style="display: inline"></div>
         <div id="pi10" style="display: inline"></div>
-      </div>
+    </div>
 
-      <div class="my-3 p-3 bg-white rounded box-shadow">
+    <div class="my-3 p-3 bg-white rounded box-shadow">
         <h6 class="border-bottom border-gray pb-2 mb-0">추천 보험 상품 목록</h6>
         {% for insure in recommend %}
-          <div class="media text-muted pt-3">
+        <div class="media text-muted pt-3">
             <img data-src="holder.js/32x32?theme=thumb&bg=007bff&fg=007bff&size=1" alt="" class="mr-2 rounded">
             <div class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
-              <div class="d-flex justify-content-between align-items-center w-100">
-                <strong class="text-gray-dark">{{ insure['name'] }}</strong>
-                <a href="{{ insure['url'] }}">자세히</a>
-              </div>
-              <span class="d-block">{{ insure['product'] }}</span>
+                <div class="d-flex justify-content-between align-items-center w-100">
+                    <strong class="text-gray-dark">{{ insure['name'] }}</strong>
+                    <a href="{{ insure['url'] }}">자세히</a>
+                </div>
+                <span class="d-block">{{ insure['product'] }}</span>
             </div>
-          </div>
+        </div>
         {% endfor %}
-      </div>
-    </main>
+    </div>
+</main>
 
-    <!-- Bootstrap core JavaScript
-    ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-    <script>window.jQuery || document.write('<script src="static/js/jquery-slim.min.js"><\/script>')</script>
-    <script src="static/js/popper.min.js"></script>
-    <script src="static/js/bootstrap.min.js"></script>
-    <script src="static/js/holder.min.js"></script>
-    <script src="static/js/offcanvas.js"></script>
-  </body>
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+<script>window.jQuery || document.write('<script src="static/js/jquery-slim.min.js"><\/script>')</script>
+<script src="static/js/popper.min.js"></script>
+<script src="static/js/bootstrap.min.js"></script>
+<script src="static/js/holder.min.js"></script>
+<script src="static/js/offcanvas.js"></script>
+</body>
 </html>

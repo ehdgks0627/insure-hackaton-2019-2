@@ -6,7 +6,9 @@ from sqlalchemy import Column, ForeignKey, Integer, String, DateTime, Float, Boo
 from base64 import b64encode, b64decode
 from lane import detect_lane
 from PIL import Image
+from io import BytesIO
 import io
+import base64
 
 app = Flask(__name__, static_url_path='/static/', static_folder='templates/static')
 
@@ -15,6 +17,12 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
+
+
+def image_to_base64(image):
+    buffered = BytesIO()
+    image.save(buffered, format="PNG")
+    return base64.b64encode(buffered.getvalue())
 
 
 class Car(db.Model):
@@ -44,7 +52,8 @@ class Record(db.Model):
 
     id = Column(Integer, primary_key=True)
     car_id = Column(Integer)
-    screen = Column(BLOB)
+    mainImg = Column(BLOB)
+    laneImg = Column(BLOB)
     latitude = Column(Float)
     longitude = Column(Float)
     degree = Column(Float)
@@ -57,7 +66,8 @@ class Record(db.Model):
         return {
             'id': self.id,
             'car_id': self.car_id,
-            'screen': self.screen.decode(),
+            'mainImg': self.mainImg.decode(),
+            'laneImg': self.laneImg.decode(),
             'latitude': self.latitude,
             'longitude': self.longitude,
             'degree': self.degree,
@@ -90,11 +100,13 @@ def get_record():
 def create_record():
     screen = b64decode(request.json.get('screen').encode())
     image = Image.open(io.BytesIO(screen))
+    print(type(image))
     touch, degree, final = detect_lane(image)
 
     record = Record(
         car_id=request.json.get('car_id'),
-        screen=screen,
+        mainImg=screen,
+        laneImg=image_to_base64(final),
         touch=touch,
         degree=degree,
         latitude=request.json.get('latitude'),
