@@ -7,6 +7,7 @@ from base64 import b64encode, b64decode
 from lane import detect_lane
 from PIL import Image
 from io import BytesIO
+from yolololo import run
 import io
 import base64
 import numpy
@@ -19,6 +20,8 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
+
+run()
 
 
 def image_to_base64(image):
